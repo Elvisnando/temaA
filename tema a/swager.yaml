@@ -1,0 +1,137 @@
+swagger: "2.0"
+info:
+  version: 1.0.0
+  title: "pertemaastronauti"
+  description: A sample API that uses a petstore as an example to demonstrate features in the swagger-2.0 specification
+  termsOfService: http://swagger.io/terms/
+  contact:
+    name: Swagger API Team
+    email: foo@example.com
+    url: http://madskristensen.net
+  license:
+    name: MIT
+    url: http://github.com/gruntjs/grunt/blob/master/LICENSE-MIT
+host: petstore.swagger.io
+basePath: /
+schemes:
+  - http
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  /astronauts:
+    get:
+      description: ritorna una lista di astronauti
+      operationId: ritonaAstronauti
+      
+      responses:
+        200:
+          description: astronaiti in lista
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Astronauta'
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    post:
+      description: inserire un nuovo astronauta
+      operationId: addAstronauta
+      parameters:
+        - name: astronauta
+          in: body
+          description: astronauta da aggiungere 
+          required: true
+          schema:
+            $ref: '#/definitions/NewAstronauta'
+      responses:
+        200:
+          description: astronata inserito
+          schema:
+            $ref: '#/definitions/Astronauta'
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /astronauts/{id}:
+    get:
+      description: ritorna astronauta che c'è nel id
+      operationId: trova astronauta con id
+      parameters:
+        - name: id
+          in: path
+          description: ID austronauta da restiruire
+          required: true
+          type: integer
+          format: int64
+      responses:
+        200:
+          description: astronauta risposta
+          schema:
+            $ref: '#/definitions/Astronauta'
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+            
+    put:
+      description: modifica astronado id con quello passato nel body
+      operationId: addAstronauta
+      parameters:
+      - name: id
+        in: path
+        description: ID austronauta da modificare
+        required: true
+        type: integer
+        format: int64
+      - name: astronauta
+        in: body
+        description: dati da modificare nel astronauta con id
+        required: true
+        schema:
+            $ref: '#/definitions/NewAstronauta'
+      responses:
+        200:
+          description: astronata inserito
+          schema:
+            $ref: '#/definitions/Astronauta'
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+   
+definitions:
+  Astronauta:
+    allOf:
+      - $ref: '#/definitions/NewAstronauta'
+      - required:
+        - id
+        properties:
+          id:
+            type: integer
+            format: int64
+  NewAstronauta:
+    required:
+      - name
+      - surname
+      - inspace
+    properties:
+      name:
+        type: string
+      surname:
+        type: string
+      inspace:
+        type: boolean
+      
+  Error:
+    required:
+      - code
+      - message
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
